@@ -1,4 +1,5 @@
 const socket = io("http://localhost:3000");
+let roomId = null;
 
 function onLoad() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -31,8 +32,6 @@ function onLoad() {
   });
 
   socket.emit("get_user", users => {
-      console.log('get_user', users);
-
       users.map(user => {
         if(user.email !== email) {
           addUser(user)
@@ -50,26 +49,24 @@ const addUser = user => {
       id="user_${user._id}"
       idUser="${user._id}"
     >
-      <div class="row col-md-12 flex flex-row">
-        <div class="col-md-3 col-lg-2">
-            <img
-              class="nav_avatar"
-              style="object-fit: fill;"
-              src="${user.avatar}"
-            />
-        </div>
-
-        <div class="row col-md-9 flex flex-column"> 
-          <div>
-            <p class="text-capitalize mb-0">${user.name}</p>
-          </div>
-          <div>
-            <small class="text-lowercase">${user.email}</small>
-          </div>
-        </div>
-      </div>
+      <img
+        class="nav_avatar"
+        style="object-fit: fill;"
+        src="${user.avatar}"
+      />
+      ${user.name}
     </li>
   `;
 }
+
+document.getElementById("users_list").addEventListener("click", (e) => {
+  if(e.target && e.target.matches("li.user_name_list")) {
+    const idUser = e.target.getAttribute("idUser");
+
+    socket.emit("start_chat", { idUser }, (data) => {
+      roomId = data.room.idChatRoom;
+    });
+  }
+});
 
 onLoad();

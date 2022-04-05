@@ -66,6 +66,9 @@ const addUser = user => {
 }
 
 document.getElementById("users_list").addEventListener("click", (e) => {
+  const divMessageUser = document.getElementById("message_user");
+  divMessageUser.innerHTML = "";
+
   if(e.target && e.target.matches("li.user_name_list")) {
     const idUser = e.target.getAttribute("idUser");
 

@@ -13,7 +13,8 @@ class CreateMessageService {
         const message = await Message.create({
             to,
             text,
-            roomId
+            roomId,
+            created_at: new Date()
         });
 
         return message;

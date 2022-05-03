@@ -13,10 +13,7 @@ const MessageSchema = new Schema({
         ref: "Users"
     },
     text: String,
-    created_at: {
-        type: Date,
-        default: Date.now()
-    },
+    created_at: Date,
     roomId: {
         type: String,
         ref: "ChatRoom"

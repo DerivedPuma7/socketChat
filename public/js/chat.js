@@ -75,6 +75,9 @@ const addUser = user => {
 }
 
 document.getElementById("users_list").addEventListener("click", (e) => {
+  const inputMessage = document.getElementById("user_message");
+  inputMessage.classList.remove("hidden");
+
   const divMessageUser = document.getElementById("message_user");
   divMessageUser.innerHTML = "";
 
@@ -82,6 +85,8 @@ document.getElementById("users_list").addEventListener("click", (e) => {
     const idUser = e.target.getAttribute("idUser");
 
     removeNotification(idUser);
+    removeAllConversationFocus();
+    addConversationFocus(idUser);
 
     socket.emit("start_chat", { idUser }, (response) => {
       idChatRoom = response.room.idChatRoom;
@@ -143,4 +148,14 @@ const removeNotification = idUser => {
   if(notification) {
     notification.remove();
   }
+}
+
+const addConversationFocus = idUser => {
+  const elementToFocus = document.querySelector(`#user_${idUser}`);
+  elementToFocus.classList.add("user_in_focus");
+}
+
+const removeAllConversationFocus = () => {
+  const ItensToRemoveFocus = document.querySelectorAll("li.user_name_list");
+  ItensToRemoveFocus.forEach(item => item.classList.remove("user_in_focus"));
 }

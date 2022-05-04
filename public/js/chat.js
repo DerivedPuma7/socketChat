@@ -40,7 +40,16 @@ function onLoad() {
   });
 
   socket.on("message", (data) => {
-    addMessage(data);
+    if(data.message.roomId === idChatRoom) {
+      addMessage(data);
+    }
+  });
+
+  socket.on("notification", (data) => {
+    //não deve mostrar notificação se a pessoa ja estiver com o chat aberto
+    if(data.roomId !== idChatRoom) {
+      addNotification(data.from._id)
+    }
   });
 
 }
@@ -71,6 +80,8 @@ document.getElementById("users_list").addEventListener("click", (e) => {
 
   if(e.target && e.target.matches("li.user_name_list")) {
     const idUser = e.target.getAttribute("idUser");
+
+    removeNotification(idUser);
 
     socket.emit("start_chat", { idUser }, (response) => {
       idChatRoom = response.room.idChatRoom;
@@ -117,4 +128,19 @@ const addMessage = data => {
   </div>
   `;
 
+}
+
+const addNotification = userToBeNotifiedId => {
+  const user = document.getElementById(`user_${userToBeNotifiedId}`);
+  
+  user.insertAdjacentHTML("afterbegin", `
+    <div class="notification"> </div>
+  `);
+}
+
+const removeNotification = idUser => {
+  const notification = document.querySelector(`#user_${idUser} .notification`);
+  if(notification) {
+    notification.remove();
+  }
 }

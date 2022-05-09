@@ -1,0 +1,2 @@
+buildar o dockerfile:                         docker build -t nome_imagem .
+subir o container com a imagem do dockerfile: docker run --name nome_container -p 3000:3000 nome_imagem
